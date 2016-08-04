@@ -197,10 +197,10 @@ class Category extends CI_Controller {
                 $this->load->view('admin/subcategory/edit', $data);
                 $this->load->view('admin/includes/footer');
             } else {
-                redirect(base_url() . 'admin/category/', 'refresh');
+                redirect(base_url() . 'admin/subcategory/', 'refresh');
             }
         } else {
-            redirect(base_url() . 'admin/category/', 'refresh');
+            redirect(base_url() . 'admin/subcategory/', 'refresh');
         }
     }
     
