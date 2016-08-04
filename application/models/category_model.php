@@ -10,7 +10,7 @@ class Category_model extends CI_Model {
         $this->load->database();
     }
 
-    function category_lists() {
+    public function category_lists() {
 
         $this->db->select('*');
         $this->db->from('category_mst');
@@ -25,7 +25,7 @@ class Category_model extends CI_Model {
         }
     }
     
-    function get_category_list($pk_cat_id) {
+    public function get_category_list($pk_cat_id) {
 
         $this->db->select('*');
         $this->db->from('category_mst');
@@ -81,7 +81,7 @@ class Category_model extends CI_Model {
     
     // Sub Category Functions
     
-     function sub_category_lists() {
+     public function sub_category_lists() {
         $this->db->select('sc.*,c.cate_name');
         $this->db->from('sub_category_mst as sc');
         $this->db->join('category_mst as c','sc.fk_cat_id=c.pk_cat_id');        
@@ -102,7 +102,7 @@ class Category_model extends CI_Model {
         $this->db->where('fk_cat_id',$fk_cat_id);
         if($pk_sub_cat_id!="")
         {
-        $this->db->where('md5(pk_sub_cat_id) !=',$pk_cat_id);        
+        $this->db->where('md5(pk_sub_cat_id) !=',$pk_sub_cat_id);        
         }
         $query = $this->db->get();
         //echo $this->db->last_query();
@@ -127,4 +127,24 @@ class Category_model extends CI_Model {
         return ($this->db->affected_rows() > 0);
     }
     
+    public function get_sub_category_list($pk_sub_cat_id) {
+        $this->db->select('sc.*,c.cate_name');
+        $this->db->from('sub_category_mst as sc');
+        $this->db->join('category_mst as c','sc.fk_cat_id=c.pk_cat_id');
+        $this->db->where('md5(pk_sub_cat_id)',$pk_sub_cat_id);
+        $query = $this->db->get();        
+        if ($query->num_rows()>0) {
+            return $query->result_array();
+            return array();
+        } else {
+            return array();
+        }
+    }
+    
+    public function update_sub_category($set_data,$pk_sub_cat_id)
+    {
+        $this->db->where('md5(pk_sub_cat_id)',$pk_sub_cat_id);
+        $this->db->update("sub_category_mst",$set_data);
+        return ($this->db->affected_rows() > 0);
+    }
 }

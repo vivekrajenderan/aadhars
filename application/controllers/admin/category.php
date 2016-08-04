@@ -173,8 +173,8 @@ class Category extends CI_Controller {
                     'channel_no' => trim($this->input->post('channel_no')),
                     'channel_url' => trim($this->input->post('channel_url'))
                 );
-                $add_category = $this->categories->save_sub_category($data);
-                if ($add_category == 1) {
+                $add_subcategory = $this->categories->save_sub_category($data);
+                if ($add_subcategory == 1) {
                     $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('channel_name')) . ' Sub Category Added Successfully');
                     echo json_encode(array('status' => 1));
                 } else {
@@ -183,11 +183,61 @@ class Category extends CI_Controller {
             }
         }
     }
+    
+    public function sub_category_edit($pk_sub_cat_id = NULL) {
+
+        if ($pk_sub_cat_id != "") {
+            $category_lists = $this->categories->category_lists();
+            $get_sub_category_list = $this->categories->get_sub_category_list($pk_sub_cat_id);
+            if (count($get_sub_category_list) > 0) {
+
+                $data = array('get_sub_category_list' => $get_sub_category_list,'category_lists' => $category_lists,'pk_sub_cat_id' => $pk_sub_cat_id);
+                $this->load->view('admin/includes/header');
+                $this->load->view('admin/includes/sidebar');
+                $this->load->view('admin/subcategory/edit', $data);
+                $this->load->view('admin/includes/footer');
+            } else {
+                redirect(base_url() . 'admin/category/', 'refresh');
+            }
+        } else {
+            redirect(base_url() . 'admin/category/', 'refresh');
+        }
+    }
+    
+    public function ajax_edit_sub_category() {
+
+
+        if (($this->input->server('REQUEST_METHOD') == 'POST')) {
+            $this->form_validation->set_rules('pk_cat_id', 'Category Name', 'trim|required');           
+            $this->form_validation->set_rules('channel_name', 'Channel Name', 'trim|required|min_length[3]|max_length[30]');           
+            $this->form_validation->set_rules('channel_no', 'Channel Number', 'trim|required|min_length[3]|max_length[30]');           
+            $this->form_validation->set_rules('channel_url', 'Channel URL', 'trim|required|min_length[3]|max_length[150]');           
+            if ($this->form_validation->run() == FALSE) {
+
+                echo json_encode(array('status' => 0, 'msg' => validation_errors()));
+                return false;
+            } else {
+                $data = array('fk_cat_id' => trim($this->input->post('pk_cat_id')),
+                    'channel_name' => trim($this->input->post('channel_name')),
+                    'channel_no' => trim($this->input->post('channel_no')),
+                    'channel_url' => trim($this->input->post('channel_url'))
+                );
+                $id = trim($this->input->post('pk_sub_cat_id'));
+                $update_subcategory = $this->categories->update_sub_category($data,$id);
+                if ($update_subcategory == 1) {
+                    $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('channel_name')) . ' Sub Category Updated Successfully');
+                    echo json_encode(array('status' => 1));
+                } else {
+                    echo json_encode(array('status' => 0, 'msg' => 'Sub Category Updated Not Successfully'));
+                }
+            }
+        }
+    }
 
     public function exist_sub_category_check() {
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
 
-            $check_exist = $this->categories->check_exist_sub_category(trim($this->input->post('cate_name')), trim($this->input->post('pk_cat_id')));
+            $check_exist = $this->categories->check_exist_sub_category(trim($this->input->post('channel_name')), trim($this->input->post('fk_cat_id')),trim($this->input->post('pk_sub_cat_id')));
             if (count($check_exist)) {
                 echo "1";
             } else {

@@ -1,14 +1,15 @@
+<link href="<?php echo base_url(); ?>assets/select2/select2.min.css" rel="stylesheet">
 <!-- page content -->
 <div class="right_col" role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>EDIT CATEGORY</h3>
+                <h3>SUB ADD CATEGORY</h3>
             </div>
 
             <div class="title_right">
                 <div class="pull-right">
-                    <a href="<?php echo base_url() . 'admin/category/'; ?>" class="btn btn-default" >Category List</a>
+                    <a href="<?php echo base_url() . 'admin/category/subcategory'; ?>" class="btn btn-default" >Sub Category List</a>
                 </div>
             </div>
         </div>
@@ -19,7 +20,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Edit <small>Category</small></h2>
+                        <h2>Sub Add <small>Category</small></h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>                      
@@ -38,15 +39,40 @@
                                 </div>
                             </div>
                         </div>
-                        <form  class="form-horizontal form-label-left" method="post" autocomplete="off" id="category-form" action="<?php echo base_url() . 'admin/category/ajax_edit'; ?>">
-                            <input type="hidden" name="pk_cat_id" id="pk_cat_id" value="<?php echo $pk_cat_id;?>">
+                        <form  class="form-horizontal form-label-left" method="post" autocomplete="off" id="category-form" action="<?php echo base_url() . 'admin/category/ajax_edit_sub_category'; ?>">
+                            <input type="hidden" name="pk_sub_cat_id" id="pk_sub_cat_id" value="<?php echo $pk_sub_cat_id; ?>">
                             <div class="form-group elVal">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Category Name <span class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Category</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select class="select2_single form-control" tabindex="-1" name="pk_cat_id" id="pk_cat_id">
+                                        <option></option>                                        
+                                        <?php foreach ($category_lists as $key => $cate_list) { ?>
+                                            <option value="<?php echo $cate_list['pk_cat_id']; ?>" <?php if($get_sub_category_list[0]['fk_cat_id']==$cate_list['pk_cat_id']) { echo "selected";}?>><?php echo $cate_list['cate_name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group elVal">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Channel Name <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="cate_name" name="cate_name" class="form-control col-md-7 col-xs-12" maxlength="30" minlength="3" value="<?php echo $get_category_list[0]['cate_name'];?>">
+                                    <input type="text" id="channel_name" name="channel_name" class="form-control col-md-7 col-xs-12" maxlength="30" minlength="3" value="<?php echo $get_sub_category_list[0]['channel_name'];?>">
                                 </div>
-                            </div>                            
+                            </div>    
+                            <div class="form-group elVal">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Channel Number <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="channel_no" name="channel_no" class="form-control col-md-7 col-xs-12" maxlength="30" minlength="3" value="<?php echo $get_sub_category_list[0]['channel_no'];?>">
+                                </div>
+                            </div>                             
+                            <div class="form-group elVal">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Channel URL <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="channel_url" name="channel_url" class="form-control col-md-7 col-xs-12" maxlength="150" minlength="3" value="<?php echo $get_sub_category_list[0]['channel_url'];?>">
+                                </div>
+                            </div> 
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -76,17 +102,40 @@
                 $(element).closest('.elVal').removeClass("form-field text-error");
             }, errorElement: 'span',
             rules: {
-                cate_name: {
+                pk_cat_id: {
+                    required: true
+                },
+                channel_name: {
                     required: true,
                     minlength: 3,
                     maxlength: 30,
-                    Exist_Category: true
+                    Exist_Channel: true
+                },
+                channel_no: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 40,
+                },
+                channel_url: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 150,
+                    url: true
                 }
+                
             },
             messages: {
-                cate_name: {
-                    required: "Please enter Category name"
-
+                pk_cat_id: {
+                    required: "Please Choose Category Name"
+                },
+                channel_name: {
+                    required: "Please enter Channel name"
+                },
+                channel_no: {
+                    required: "Please enter Channel Number"
+                },
+                channel_url: {
+                    required: "Please enter Channel URL"
                 }
             },
             errorPlacement: function (error, element) {
@@ -103,7 +152,7 @@
 
                     if (response.status == "1")
                     {
-                        window.location = "<?php echo base_url(); ?>admin/category/";
+                        window.location = "<?php echo base_url(); ?>admin/category/subcategory";
                     }
                     else
                     {
@@ -118,10 +167,11 @@
             }
         });
 
-        $.validator.addMethod("Exist_Category", function (value, element) {
+        $.validator.addMethod("Exist_Channel", function (value, element) {
 
-            var pk_cat_id = $("#pk_cat_id").val();
-            var checkCategory = check_exist_category(value, pk_cat_id);
+            var pk_sub_cat_id = $("#pk_sub_cat_id").val();
+            var fk_cat_id = $("#pk_cat_id").val();
+            var checkCategory = check_exist_category(value, pk_sub_cat_id,fk_cat_id);
             if (checkCategory == "1")
             {
                 return false;
@@ -144,12 +194,12 @@
 
     });
 
-    function check_exist_category(cate_name, pk_cat_id) {
+    function check_exist_category(channel_name, pk_sub_cat_id,fk_cat_id) {
         var isSuccess = 0;
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url(); ?>admin/category/exist_category_check",
-            data: "cate_name=" + cate_name + "&pk_cat_id=" + pk_cat_id,
+            url: "<?php echo base_url(); ?>admin/category/exist_sub_category_check",
+            data: "channel_name=" + channel_name + "&pk_sub_cat_id=" + pk_sub_cat_id+"&fk_cat_id="+fk_cat_id,
             async: false,
             success:
                     function (msg) {
@@ -158,4 +208,14 @@
         });
         return isSuccess;
     }
+</script>
+<script src="<?php echo base_url(); ?>assets/select2/select2.full.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".select2_single").select2({
+            placeholder: "Select a Category",
+            allowClear: true
+        });
+    });
 </script>

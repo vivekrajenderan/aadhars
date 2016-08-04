@@ -120,6 +120,7 @@
                     required: true,
                     minlength: 3,
                     maxlength: 150,
+                    url: true
                 }
                 
             },
