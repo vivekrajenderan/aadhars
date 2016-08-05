@@ -35,7 +35,8 @@
                                 <button data-dismiss="alert" class="close" type="button">&times;</button>
                                 <?php echo $this->session->flashdata('ErrorMessages'); ?>
                             </div><!--alert-->
-                        <?php }
+                            <?php
+                        }
 
                         if ($this->session->flashdata('SucMessage') != '') {
                             ?>
@@ -44,10 +45,11 @@
                                 <?php echo $this->session->flashdata('SucMessage'); ?>
                             </div><!--alert-->
                         <?php } ?>
-
+                        
                         <table id="datatable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
+                                    <th>Sl.No</th>
                                     <th>Category Name</th>
                                     <th>Channel Name</th>
                                     <th>Channel Number</th>
@@ -62,12 +64,23 @@
                             <tbody>
                                 <?php foreach ($sub_category_lists as $key => $list) { ?>
                                     <tr>
+                                        <td><?php echo $key+1;?></td>
                                         <td><?php echo $list['cate_name']; ?></td>
                                         <td><?php echo $list['channel_name']; ?></td>
                                         <td><?php echo $list['channel_no']; ?></td>
-                                        <td><?php echo $list['channel_url']; ?></td>
-                                        <td><?php echo $list['channel_logo']; ?></td>
-                                        <td><?php echo date("Y-m-d", strtotime($list['created_on'])); ?></td>
+                                        <td><?php echo $list['channel_url']; ?></td>                                        
+                                        <td>
+                                            <?php                                            
+
+                                            if (file_exists("./upload/channel/".$list['channel_logo'])) {
+                                                $image_name = $list['channel_logo'];
+                                            } else {
+                                                $image_name = "no_image.png";
+                                            }
+                                            ?>
+                                            <img class="img-thumbnail" src = "<?php echo base_url() . 'upload/channel/' . $image_name; ?>" width = "100" height = "100"></td>
+                                        <td><?php  echo date("Y-m-d", strtotime($list['created_on']));
+                                            ?></td>
                                         <td >   <a href="<?php echo base_url(); ?>admin/category/sub_category_edit/<?php echo md5($list['pk_sub_cat_id']); ?>" title="edit"><i class="fa fa-edit"></i></a> 
                                             &nbsp;&nbsp;&nbsp;<a title="delete" href="<?php echo base_url(); ?>admin/category/sub_category_delete/<?php echo md5($list['pk_sub_cat_id']); ?>" onClick="return confirm('Do u really want to delete Sub Category?');" > <i class="fa fa-trash"></i></a>
                                         </td>
@@ -75,6 +88,7 @@
                                 <?php } ?>
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>

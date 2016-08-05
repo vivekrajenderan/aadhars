@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form  class="form-horizontal form-label-left" method="post" autocomplete="off" id="category-form" action="<?php echo base_url() . 'admin/category/ajax_add_sub_category'; ?>">
+                        <form  class="form-horizontal form-label-left" method="post" autocomplete="off" id="category-form" action="<?php echo base_url() . 'admin/category/ajax_add_sub_category'; ?>" enctype="multipart/form-data">
 
                             <div class="form-group elVal">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Category</label>
@@ -72,11 +72,35 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" id="channel_url" name="channel_url" class="form-control col-md-7 col-xs-12" maxlength="150" minlength="3">
                                 </div>
-                            </div> 
+                            </div>                             
+                            <div class="row"> 
+                                <div class="form-group elVal">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Channel Logo <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">  
+                                        <!-- image-preview-filename input [CUT FROM HERE]-->
+                                        <div class="input-group image-preview" style="padding-left: 5px;">
+                                            <input type="text" class="form-control image-preview-filename" disabled="disabled">
+                                            <span class="input-group-btn">
+                                                <!-- image-preview-clear button -->
+                                                <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                                                    <span class="fa fa-remove"></span> Clear
+                                                </button>
+                                                <!-- image-preview-input -->
+                                                <div class="btn btn-default image-preview-input">
+                                                    <span class="fa fa-folder-open"></span>
+                                                    <span class="image-preview-input-title">Browse</span>
+                                                    <input type="file" name="channel_logo" id="channel_logo" accept="image/png, image/jpeg, image/gif" name="input-file-preview"/> <!-- rename it -->
+                                                </div>
+                                            </span>
+                                        </div><!-- /input-group image-preview [TO HERE]--> 
+                                    </div>
+                                </div>
+                            </div>
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a href="<?php echo base_url(); ?>admin/category" class="btn btn-primary">Cancel</a>                                    
+                                    <a href="<?php echo base_url(); ?>admin/category/subcategory" class="btn btn-primary">Cancel</a>                                    
                                     <button type="submit" class="btn btn-success">Submit</button>
                                 </div>
                             </div>
@@ -121,8 +145,12 @@
                     minlength: 3,
                     maxlength: 150,
                     url: true
+                },
+                channel_logo: {
+                    required: true,
+                    imagefilecheck: true
                 }
-                
+
             },
             messages: {
                 pk_cat_id: {
@@ -136,20 +164,29 @@
                 },
                 channel_url: {
                     required: "Please enter Channel URL"
+                },
+                channel_logo: {
+                    required: "Please choose Channel Logo"
                 }
             },
             errorPlacement: function (error, element) {
                 error.appendTo(element.closest(".elVal"));
             },
             submitHandler: function (form) {
+
+                var formData = new FormData($('#category-form')[0]);
+                formData.append('channel_logo', $('input[type=file]')[0].files[0]);
                 var $form = $("#category-form");
                 $.ajax({
                     type: $form.attr('method'),
                     url: $form.attr('action'),
-                    data: $form.serialize(),
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     dataType: 'json'
-                }).done(function (response) {
-
+                }).done(function (response) {                    
                     if (response.status == "1")
                     {
                         window.location = "<?php echo base_url(); ?>admin/category/subcategory";
@@ -171,7 +208,7 @@
 
             var pk_sub_cat_id = "";
             var fk_cat_id = $("#pk_cat_id").val();
-            var checkCategory = check_exist_category(value, pk_sub_cat_id,fk_cat_id);
+            var checkCategory = check_exist_category(value, pk_sub_cat_id, fk_cat_id);
             if (checkCategory == "1")
             {
                 return false;
@@ -179,6 +216,17 @@
             return true;
 
         }, "Category Already Exists!");
+
+        $.validator.addMethod("imagefilecheck", function (value, element) {
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            if ($.inArray(value.split('.').pop().toLowerCase(), fileExtension) == -1) {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }, "Please choose format type .jpg, .jpeg, .png, .gif, .bmp");
 
         $.validator.addMethod("Alphaspace", function (value, element) {
             return this.optional(element) || /^[a-z ]+$/i.test(value);
@@ -194,12 +242,12 @@
 
     });
 
-    function check_exist_category(channel_name, pk_sub_cat_id,fk_cat_id) {
+    function check_exist_category(channel_name, pk_sub_cat_id, fk_cat_id) {
         var isSuccess = 0;
         $.ajax({
             type: "POST",
             url: "<?php echo base_url(); ?>admin/category/exist_sub_category_check",
-            data: "channel_name=" + channel_name + "&pk_sub_cat_id=" + pk_sub_cat_id+"&fk_cat_id="+fk_cat_id,
+            data: "channel_name=" + channel_name + "&pk_sub_cat_id=" + pk_sub_cat_id + "&fk_cat_id=" + fk_cat_id,
             async: false,
             success:
                     function (msg) {
@@ -216,6 +264,64 @@
         $(".select2_single").select2({
             placeholder: "Select a Category",
             allowClear: true
+        });
+    });
+    $(document).on('click', '#close-preview', function () {
+        $('.image-preview').popover('hide');
+        // Hover befor close the preview
+        $('.image-preview').hover(
+                function () {
+                    $('.image-preview').popover('show');
+                },
+                function () {
+                    $('.image-preview').popover('hide');
+                }
+        );
+    });
+
+    $(function () {
+        // Create the close button
+        var closebtn = $('<button/>', {
+            type: "button",
+            text: 'x',
+            id: 'close-preview',
+            style: 'font-size: initial;',
+        });
+        closebtn.attr("class", "close pull-right");
+        // Set the popover default content
+        $('.image-preview').popover({
+            trigger: 'manual',
+            html: true,
+            title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+            content: "There's no image",
+            placement: 'bottom'
+        });
+        // Clear event
+        $('.image-preview-clear').click(function () {
+            $('.image-preview').attr("data-content", "").popover('hide');
+            $('.image-preview-filename').val("");
+            $('.image-preview-clear').hide();
+            $('.image-preview-input input:file').val("");
+            $(".image-preview-input-title").text("Browse");
+        });
+        // Create the preview image
+        $(".image-preview-input input:file").change(function () {
+            var img = $('<img/>', {
+                id: 'dynamic',
+                width: 250,
+                height: 200
+            });
+            var file = this.files[0];
+            var reader = new FileReader();
+            // Set preview image into the popover data-content
+            reader.onload = function (e) {
+                $(".image-preview-input-title").text("Change");
+                $(".image-preview-clear").show();
+                $(".image-preview-filename").val(file.name);
+                img.attr('src', e.target.result);
+                $(".image-preview").attr("data-content", $(img)[0].outerHTML).popover("show");
+            }
+            reader.readAsDataURL(file);
         });
     });
 </script>

@@ -14,7 +14,7 @@ class Users extends CI_Controller {
         $this->load->model('users_model', 'users');
         $this->load->library('form_validation');
         if ($this->session->userdata('logged_in') == False) {
-            redirect(base_url() . 'login/', 'refresh');
+            redirect(base_url() . 'admin/login/', 'refresh');
         }
     }
 
@@ -43,7 +43,7 @@ class Users extends CI_Controller {
             $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|min_length[3]|max_length[20]');
             $this->form_validation->set_rules('emailid', 'Email', 'trim|required|valid_email|is_unique[user_mst.emailid]');
             $this->form_validation->set_rules('mobileno', 'Mobile Number', 'trim|required|min_length[10]|max_length[10]');
-            $this->form_validation->set_rules('vc_number', 'VC Number', 'trim|required|min_length[3]|max_length[10]');
+            $this->form_validation->set_rules('vc_number', 'VC Number', 'trim|required|min_length[3]|max_length[30]|is_unique[user_mst.vc_number]');
             if ($this->form_validation->run() == FALSE) {
 
                 echo json_encode(array('status' => 0, 'msg' => validation_errors()));
@@ -95,7 +95,7 @@ class Users extends CI_Controller {
             $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|min_length[3]|max_length[20]');
             $this->form_validation->set_rules('emailid', 'Email', 'trim|required|valid_email');
             $this->form_validation->set_rules('mobileno', 'Mobile Number', 'trim|required|min_length[10]|max_length[10]');
-            $this->form_validation->set_rules('vc_number', 'VC Number', 'trim|required|min_length[3]|max_length[10]');
+            $this->form_validation->set_rules('vc_number', 'VC Number', 'trim|required|min_length[3]|max_length[30]');
             if ($this->form_validation->run() == FALSE) {
 
                 echo json_encode(array('status' => 0, 'msg' => validation_errors()));
@@ -123,6 +123,18 @@ class Users extends CI_Controller {
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
 
             $check_exist = $this->users->check_exist_email(trim($this->input->post('email')), trim($this->input->post('pk_uid')));
+            if (count($check_exist)) {
+                echo "1";
+            } else {
+                echo "0";
+            }
+        }
+    }
+    
+    public function exist_vcnumber_check() {
+        if (($this->input->server('REQUEST_METHOD') == 'POST')) {
+
+            $check_exist = $this->users->check_exist_vcnumber(trim($this->input->post('vc_number')), trim($this->input->post('pk_uid')));
             if (count($check_exist)) {
                 echo "1";
             } else {

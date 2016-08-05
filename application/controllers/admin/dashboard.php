@@ -14,7 +14,7 @@ class Dashboard extends CI_Controller {
         $this->output->set_header("Cache-Control: post-check=0, pre-check=0", false);
         $this->output->set_header("Pragma: no-cache");
         if ($this->session->userdata('logged_in') == False) {
-            redirect(base_url() . 'login/', 'refresh');
+            redirect(base_url() . 'admin/login/', 'refresh');
         }
     }
 

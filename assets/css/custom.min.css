@@ -2869,13 +2869,8 @@ ul.project_files li a i {
 .view-first:hover p {
     transition-delay: 0.1s;
 }
-/*!
- * bootstrap-vertical-tabs - v1.2.1
- * https://dbtek.github.io/bootstrap-vertical-tabs
- * 2014-11-07
- * Copyright (c) 2014 İsmail Demirbilek
- * License: MIT
- */.tabs-left, .tabs-right {
+
+.tabs-left, .tabs-right {
     border-bottom: none;
     padding-top: 2px;
 }
@@ -3213,14 +3208,6 @@ a.hiddenanchor {
 .login_content form input[type="submit"], #content form .submit {
     float: left;
     margin-left: 38px;
-}
-.button a {
-    background: url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) 0 -112px no-repeat;
-    color: #7E7E7E;
-    font-size: 17px;
-    padding: 2px 0 2px 40px;
-    text-decoration: none;
-    transition: all 0.3s ease;
 }
 .button a:hover {
     background-position: 0 -135px;

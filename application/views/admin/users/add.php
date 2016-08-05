@@ -127,7 +127,8 @@
                 vc_number: {
                     required: true,
                     minlength: 3,
-                    maxlength: 30
+                    maxlength: 30,
+                    Exist_VC:true
                 }
             },
             messages: {
@@ -192,6 +193,19 @@
             return true;
 
         }, "Email Already Exists!");
+        
+         //Exist VC Number
+         $.validator.addMethod("Exist_VC", function (value, element) {
+
+            var pk_uid = "";
+            var checkVC = check_exist_vc(value, pk_uid);
+            if (checkVC == "1")
+            {
+                return false;
+            }
+            return true;
+
+        }, "VC Number Already Exists!");
 
         $.validator.addMethod("Alphaspace", function (value, element) {
             return this.optional(element) || /^[a-z ]+$/i.test(value);
@@ -221,4 +235,20 @@
         });
         return isSuccess;
     }
+    
+    function check_exist_vc(vc_number, pk_uid) {
+        var isSuccess = 0;
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url(); ?>admin/users/exist_vcnumber_check",
+            data: "vc_number=" + vc_number + "&pk_uid=" + pk_uid,
+            async: false,
+            success:
+                    function (msg) {
+                        isSuccess = msg === "1" ? 1 : 0
+                    }
+        });
+        return isSuccess;
+    }
+    
 </script>

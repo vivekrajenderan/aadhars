@@ -43,11 +43,11 @@
                                 <button data-dismiss="alert" class="close" type="button">&times;</button>
                                 <?php echo $this->session->flashdata('SucMessage'); ?>
                             </div><!--alert-->
-                        <?php } ?>
-
+                        <?php } ?>                          
                         <table id="datatable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
+                                    <th>Sl.No</th>
                                     <th>Category Name</th>
                                     <th>Created date</th>  
                                     <th>Action</th>     
@@ -58,6 +58,7 @@
                             <tbody>
                                 <?php foreach ($category_lists as $key => $list) { ?>
                                     <tr>
+                                        <td><?php echo $key+1;?></td>
                                         <td><?php echo $list['cate_name']; ?></td>                                       
                                         <td><?php echo date("Y-m-d", strtotime($list['created_on'])); ?></td>
                                         <td >   <a href="<?php echo base_url(); ?>admin/category/edit/<?php echo md5($list['pk_cat_id']); ?>" title="edit"><i class="fa fa-edit"></i></a> 
@@ -67,6 +68,7 @@
                                 <?php } ?>
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>

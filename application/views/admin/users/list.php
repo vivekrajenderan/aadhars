@@ -44,10 +44,11 @@
                                 <?php echo $this->session->flashdata('SucMessage'); ?>
                             </div><!--alert-->
                         <?php } ?>
-
+                          
                         <table id="datatable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
+                                    <th>Sl.No</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Email</th>
@@ -62,6 +63,7 @@
                             <tbody>
                                 <?php foreach ($user_list as $key => $list) { ?>
                                     <tr>
+                                        <td><?php echo $key+1;?></td>
                                         <td><?php echo $list['fname']; ?></td>
                                         <td><?php echo $list['lname']; ?></td>
                                         <td><?php echo $list['emailid']; ?></td>
@@ -75,6 +77,7 @@
                                 <?php } ?>
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>
