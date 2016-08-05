@@ -41,6 +41,6 @@ define('AUTH_TOKEN',		'AADHARAUTHTOKEN');
 define('REQUEST_MUST_AUTH_TOKEN',		'Request must contain auth_token');
 define('AUTH_TOKEN_NOT_EMPTY',		'auth_token should not be empty.');
 define('AUTH_TOKEN_INVALID',		'Invalid auth_token.');
-
+define('AUTH_TOKEN_INVALID_REQUEST',		'Invalid Request.');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
