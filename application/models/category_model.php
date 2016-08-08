@@ -13,8 +13,7 @@ class Category_model extends CI_Model {
     public function category_lists() {
 
         $this->db->select('*');
-        $this->db->from('category_mst');
-        $this->db->where('standing','1');
+        $this->db->from('category_mst');        
         $query = $this->db->get();
         
         if ($query->num_rows()>0) {

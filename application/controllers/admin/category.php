@@ -123,9 +123,9 @@ class Category extends CI_Controller {
             $deleteCategory = $this->categories->delete_category($pk_cat_id);
 
             if ($deleteCategory == "1") {
-                $get_sub_category_list = $this->categories->get_channels($pk_cat_id);               
+                $get_sub_category_list = $this->categories->get_channels($pk_cat_id);
                 foreach ($get_sub_category_list as $subcate) {
-                    $image_file="";
+                    $image_file = "";
                     if ($subcate["channel_logo"] != "") {
                         $image_file = './upload/channel/' . $subcate["channel_logo"];
 
@@ -147,8 +147,24 @@ class Category extends CI_Controller {
         }
     }
 
+    public function change_category_active() {
+        if (($this->input->server('REQUEST_METHOD') == 'POST')) {
+
+            $data = array('standing' => trim($this->input->post('standing'))
+            );
+            $id = trim($this->input->post('pk_cat_id'));
+            $update_category = $this->categories->update_category($data, $id);
+            $standing=($this->input->post('standing')==1 ? 'Active' : 'Inactive');
+            if ($update_category == 1) {                
+                echo json_encode(array('status' => 1, 'msg' => "Category $standing Successfully"));
+            } else {
+                echo json_encode(array('status' => 0, 'msg' => "Category $standing Not Successfully"));
+            }
+        }
+    }
+
     public function channel_list() {
-        $channel_lists = $this->categories->channel_lists();        
+        $channel_lists = $this->categories->channel_lists();
         $data = array('channel_lists' => $channel_lists);
         $this->load->view('admin/includes/header');
         $this->load->view('admin/includes/sidebar');
