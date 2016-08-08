@@ -20,7 +20,7 @@ class Login extends CI_Controller {
         }
     }
 
-    public function index() {
+    public function index() {        
         $this->load->view('admin/login');
     }
 
@@ -42,12 +42,10 @@ class Login extends CI_Controller {
                 if (count($row) == 1) {
                     $session_data = array(
                         'pk_uid' => $row[0]['pk_uid'],
-                        'emailid' => $row[0]['emailid'],
-                        'fk_role_id' => $row[0]['fk_role_id'],
+                        'emailid' => $row[0]['emailid'],                        
                         'fname' => $row[0]['fname'],
                         'lname' => $row[0]['lname'],
-                        'mobileno' => $row[0]['mobileno'],
-                        'vc_number' => $row[0]['vc_number'],
+                        'mobileno' => $row[0]['mobileno'],                       
                         'logged_in' => TRUE
                     );
                     $this->session->set_userdata($session_data);

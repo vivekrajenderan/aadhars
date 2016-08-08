@@ -3,12 +3,12 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>USERS LIST</h3>
+                <h3>CHANNEL LIST</h3>
             </div>
 
             <div class="title_right">
                 <div class="pull-right">
-                    <a href="<?php echo base_url() . 'admin/users/add'; ?>" class="btn btn-default" >Add User</a>
+                    <a href="<?php echo base_url() . 'admin/category/channel_add'; ?>" class="btn btn-default" >Add Channel</a>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Users <small>List</small></h2>
+                        <h2>Sub Category <small>List</small></h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>                      
@@ -35,7 +35,8 @@
                                 <button data-dismiss="alert" class="close" type="button">&times;</button>
                                 <?php echo $this->session->flashdata('ErrorMessages'); ?>
                             </div><!--alert-->
-                        <?php }
+                            <?php
+                        }
 
                         if ($this->session->flashdata('SucMessage') != '') {
                             ?>
@@ -44,16 +45,16 @@
                                 <?php echo $this->session->flashdata('SucMessage'); ?>
                             </div><!--alert-->
                         <?php } ?>
-                          
+                        
                         <table id="datatable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>Sl.No</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Mobile Number</th>
-                                    <th>VC Number</th>
+                                    <th>Category Name</th>
+                                    <th>Channel Name</th>
+                                    <th>Channel Number</th>
+                                    <th>Channel URL</th>
+                                    <th>Channel Logo</th>
                                     <th>Created date</th>  
                                     <th>Action</th>     
                                 </tr>
@@ -61,17 +62,27 @@
 
 
                             <tbody>
-                                <?php foreach ($user_list as $key => $list) { ?>
+                                <?php foreach ($channel_lists as $key => $list) { ?>
                                     <tr>
                                         <td><?php echo $key+1;?></td>
-                                        <td><?php echo $list['fname']; ?></td>
-                                        <td><?php echo $list['lname']; ?></td>
-                                        <td><?php echo $list['emailid']; ?></td>
-                                        <td><?php echo $list['mobileno']; ?></td>
-                                        <td><?php echo $list['vc_number']; ?></td>
-                                        <td><?php echo date("Y-m-d", strtotime($list['created_on'])); ?></td>
-                                        <td >   <a href="<?php echo base_url(); ?>admin/users/edit/<?php echo md5($list['pk_cust_id']); ?>" title="edit"><i class="fa fa-edit"></i></a> 
-                                            &nbsp;&nbsp;&nbsp;<a title="delete" href="<?php echo base_url(); ?>admin/users/delete/<?php echo md5($list['pk_cust_id']); ?>" onClick="return confirm('Do u really want to delete User?');" > <i class="fa fa-trash"></i></a>
+                                        <td><?php echo $list['cate_name']; ?></td>
+                                        <td><?php echo $list['channel_name']; ?></td>
+                                        <td><?php echo $list['channel_no']; ?></td>
+                                        <td><?php echo $list['channel_url']; ?></td>                                        
+                                        <td>
+                                            <?php                                            
+
+                                            if (file_exists("./upload/channel/".$list['channel_logo'])) {
+                                                $image_name = $list['channel_logo'];
+                                            } else {
+                                                $image_name = "no_image.png";
+                                            }
+                                            ?>
+                                            <img class="img-thumbnail" src = "<?php echo base_url() . 'upload/channel/' . $image_name; ?>" width = "100" height = "100"></td>
+                                        <td><?php  echo date("Y-m-d", strtotime($list['created_on']));
+                                            ?></td>
+                                        <td >   <a href="<?php echo base_url(); ?>admin/category/channel_edit/<?php echo md5($list['pk_ch_id']); ?>" title="edit"><i class="fa fa-edit"></i></a> 
+                                            &nbsp;&nbsp;&nbsp;<a title="delete" href="<?php echo base_url(); ?>admin/category/delete_channel/<?php echo md5($list['pk_ch_id']); ?>" onClick="return confirm('Do u really want to delete Sub Category?');" > <i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 <?php } ?>

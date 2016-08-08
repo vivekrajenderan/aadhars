@@ -79,18 +79,18 @@ class Category_model extends CI_Model {
         return ($this->db->affected_rows() > 0);
     }
     
-    public function delete_sub_category_list($fk_cat_id)
+    public function delete_channel_list($fk_cat_id)
     {
         $this->db->where('md5(fk_cat_id)',$fk_cat_id);
-        $this->db->delete("sub_category_mst");
+        $this->db->delete("channel_mst");
         return ($this->db->affected_rows() > 0);
     }
     
     // Sub Category Functions
     
-     public function sub_category_lists() {
+     public function channel_lists() {
         $this->db->select('sc.*,c.cate_name');
-        $this->db->from('sub_category_mst as sc');
+        $this->db->from('channel_mst as sc');
         $this->db->join('category_mst as c','sc.fk_cat_id=c.pk_cat_id');        
         $query = $this->db->get();        
         if ($query->num_rows()>0) {
@@ -101,15 +101,15 @@ class Category_model extends CI_Model {
         }
     }
     
-    public function check_exist_sub_category($channel_name,$fk_cat_id,$pk_sub_cat_id=NULL)
+    public function check_exist_sub_category($channel_name,$fk_cat_id,$pk_ch_id=NULL)
     {
         $this->db->select('*');
-        $this->db->from('sub_category_mst');
+        $this->db->from('channel_mst');
         $this->db->where('channel_name',$channel_name);  
         $this->db->where('fk_cat_id',$fk_cat_id);
-        if($pk_sub_cat_id!="")
+        if($pk_ch_id!="")
         {
-        $this->db->where('md5(pk_sub_cat_id) !=',$pk_sub_cat_id);        
+        $this->db->where('md5(pk_ch_id) !=',$pk_ch_id);        
         }
         $query = $this->db->get();
         //echo $this->db->last_query();
@@ -121,24 +121,24 @@ class Category_model extends CI_Model {
         }
     }
     
-    public function save_sub_category($set_data)
+    public function save_channel($set_data)
     {
-       $this->db->insert('sub_category_mst',$set_data);
+       $this->db->insert('channel_mst',$set_data);
        return ($this->db->affected_rows() > 0);
     }
     
-    public function delete_sub_category($pk_sub_cat_id)
+    public function delete_channel($pk_ch_id)
     {
-        $this->db->where('md5(pk_sub_cat_id)',$pk_sub_cat_id);
-        $this->db->delete("sub_category_mst");
+        $this->db->where('md5(pk_ch_id)',$pk_ch_id);
+        $this->db->delete("channel_mst");
         return ($this->db->affected_rows() > 0);
     }
     
-    public function get_sub_category_list($pk_sub_cat_id) {
+    public function get_channel_list($pk_ch_id) {
         $this->db->select('sc.*,c.cate_name');
-        $this->db->from('sub_category_mst as sc');
+        $this->db->from('channel_mst as sc');
         $this->db->join('category_mst as c','sc.fk_cat_id=c.pk_cat_id');
-        $this->db->where('md5(sc.pk_sub_cat_id)',$pk_sub_cat_id);
+        $this->db->where('md5(sc.pk_ch_id)',$pk_ch_id);
         $query = $this->db->get();        
         if ($query->num_rows()>0) {
             return $query->result_array();
@@ -148,16 +148,16 @@ class Category_model extends CI_Model {
         }
     }
     
-    public function update_sub_category($set_data,$pk_sub_cat_id)
+    public function update_channel($set_data,$pk_ch_id)
     {
-        $this->db->where('md5(pk_sub_cat_id)',$pk_sub_cat_id);
-        $this->db->update("sub_category_mst",$set_data);
+        $this->db->where('md5(pk_ch_id)',$pk_ch_id);
+        $this->db->update("channel_mst",$set_data);
         return ($this->db->affected_rows() > 0);
     }
     
-    public function get_sub_category($fk_cat_id) {
+    public function get_channels($fk_cat_id) {
         $this->db->select('*');
-        $this->db->from('sub_category_mst');        
+        $this->db->from('channel_mst');        
         $this->db->where('md5(fk_cat_id)',$fk_cat_id);
         $query = $this->db->get();        
         if ($query->num_rows()>0) {

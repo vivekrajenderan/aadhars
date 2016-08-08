@@ -3,16 +3,15 @@
               <div class="menu_section">
                 <h3>Admin</h3>
                 <ul class="nav side-menu">
-                  <li><a href="<?php echo base_url();?>admin/dashboard"><i class="fa fa-home"></i> Home</a>                    
+                  <li><a href="<?php echo base_url();?>admin/dashboard"><i class="fa fa-home"></i> Dashboard</a>                    
                   </li>
                   <li><a href="<?php echo base_url();?>admin/users"><i class="fa fa-user"></i> Users</a>                    
-                  </li> 
-                  <li><a><i class="fa fa-bar-chart-o"></i> Categories <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="<?php echo base_url().'admin/category';?>">Category List</a></li>
-                      <li><a href="<?php echo base_url().'admin/category/subcategory';?>">Sub Category List</a></li>                      
-                    </ul>
                   </li>
+                 
+                  <li><a href="<?php echo base_url();?>admin/category"><i class="fa fa-bar-chart-o"></i> Category List</a>                    
+                  </li> 
+                  <li><a href="<?php echo base_url();?>admin/category/channel_list"><i class="fa fa-tasks"></i> Channel List</a>                    
+                  </li> 
                 </ul>
               </div>
               

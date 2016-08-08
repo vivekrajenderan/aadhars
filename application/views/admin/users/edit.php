@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <form  class="form-horizontal form-label-left" method="post" autocomplete="off" id="user-form" action="<?php echo base_url() . 'admin/users/ajax_edit'; ?>">
-                            <input type="hidden" name="pk_uid" id="pk_uid" value="<?php echo $pk_uid; ?>">
+                            <input type="hidden" name="pk_cust_id" id="pk_cust_id" value="<?php echo $pk_cust_id; ?>">
                             <div class="form-group elVal">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">First Name <span class="required">*</span>
                                 </label>
@@ -184,8 +184,8 @@
 
         $.validator.addMethod("Exist_Email", function (value, element) {
 
-            var pk_uid = $("#pk_uid").val();
-            var checkEmail = check_exist_email(value, pk_uid);           
+            var pk_cust_id = $("#pk_cust_id").val();
+            var checkEmail = check_exist_email(value, pk_cust_id);           
             if (checkEmail =="1")
             {
                 return false;
@@ -195,8 +195,8 @@
         }, "Email Already Exists!");
         
         $.validator.addMethod("Exist_VC", function (value, element) {
-            var pk_uid = $("#pk_uid").val();
-            var checkVC = check_exist_vc(value, pk_uid);
+            var pk_cust_id = $("#pk_cust_id").val();
+            var checkVC = check_exist_vc(value, pk_cust_id);
             if (checkVC == "1")
             {
                 return false;
@@ -219,12 +219,12 @@
 
     });
 
-    function check_exist_email(email, pk_uid) {
+    function check_exist_email(email, pk_cust_id) {
         var isSuccess = 0;
         $.ajax({
             type: "POST",
             url: "<?php echo base_url(); ?>admin/users/exist_email_check",
-            data: "email=" + email + "&pk_uid=" + pk_uid,
+            data: "email=" + email + "&pk_cust_id=" + pk_cust_id,
             async: false,
             success:
                     function (msg) {
@@ -233,12 +233,12 @@
         });
         return isSuccess;
     }
-    function check_exist_vc(vc_number, pk_uid) {
+    function check_exist_vc(vc_number, pk_cust_id) {
         var isSuccess = 0;
         $.ajax({
             type: "POST",
             url: "<?php echo base_url(); ?>admin/users/exist_vcnumber_check",
-            data: "vc_number=" + vc_number + "&pk_uid=" + pk_uid,
+            data: "vc_number=" + vc_number + "&pk_cust_id=" + pk_cust_id,
             async: false,
             success:
                     function (msg) {

@@ -13,8 +13,7 @@ class Users_model extends CI_Model {
     function user_lists() {
 
         $this->db->select('*');
-        $this->db->from('user_mst');
-        $this->db->where('fk_role_id !=','1');
+        $this->db->from('cust_mst');        
         $query = $this->db->get();
         
         if ($query->num_rows()>0) {
@@ -25,11 +24,11 @@ class Users_model extends CI_Model {
         }
     }
     
-    function get_user_list($pk_uid) {
+    function get_user_list($pk_cust_id) {
 
         $this->db->select('*');
-        $this->db->from('user_mst');
-        $this->db->where('md5(pk_uid)',$pk_uid);        
+        $this->db->from('cust_mst');
+        $this->db->where('md5(pk_cust_id)',$pk_cust_id);        
         $query = $this->db->get();
         
         if ($query->num_rows()>0) {
@@ -42,25 +41,25 @@ class Users_model extends CI_Model {
     
     public function save_users($set_data)
     {
-       $this->db->insert('user_mst',$set_data);
+       $this->db->insert('cust_mst',$set_data);
        return ($this->db->affected_rows() > 0);
     }
     
-    public function update_users($set_data,$pk_uid)
+    public function update_users($set_data,$pk_cust_id)
     {
-        $this->db->where('md5(pk_uid)',$pk_uid);
-        $this->db->update("user_mst",$set_data);
+        $this->db->where('md5(pk_cust_id)',$pk_cust_id);
+        $this->db->update("cust_mst",$set_data);
         return ($this->db->affected_rows() > 0);
     }
 
-    public function check_exist_email($emailid,$pk_uid=NULL)
+    public function check_exist_email($emailid,$pk_cust_id=NULL)
     {
         $this->db->select('*');
-        $this->db->from('user_mst');
+        $this->db->from('cust_mst');
         $this->db->where('emailid',$emailid);  
-        if($pk_uid!="")
+        if($pk_cust_id!="")
         {
-        $this->db->where('md5(pk_uid) !=',$pk_uid);        
+        $this->db->where('md5(pk_cust_id) !=',$pk_cust_id);        
         }
         $query = $this->db->get();
         //echo $this->db->last_query();
@@ -72,14 +71,14 @@ class Users_model extends CI_Model {
         }
     }
     
-    public function check_exist_vcnumber($vc_number,$pk_uid=NULL)
+    public function check_exist_vcnumber($vc_number,$pk_cust_id=NULL)
     {
         $this->db->select('*');
-        $this->db->from('user_mst');
+        $this->db->from('cust_mst');
         $this->db->where('vc_number',$vc_number);  
-        if($pk_uid!="")
+        if($pk_cust_id!="")
         {
-        $this->db->where('md5(pk_uid) !=',$pk_uid);        
+        $this->db->where('md5(pk_cust_id) !=',$pk_cust_id);        
         }
         $query = $this->db->get();
         //echo $this->db->last_query();
@@ -91,10 +90,10 @@ class Users_model extends CI_Model {
         }
     }
     
-    public function delete_user($pk_uid)
+    public function delete_user($pk_cust_id)
     {
-        $this->db->where('md5(pk_uid)',$pk_uid);
-        $this->db->delete("user_mst");
+        $this->db->where('md5(pk_cust_id)',$pk_cust_id);
+        $this->db->delete("cust_mst");
          return ($this->db->affected_rows() > 0);
     }
     

@@ -123,7 +123,7 @@ class Category extends CI_Controller {
             $deleteCategory = $this->categories->delete_category($pk_cat_id);
 
             if ($deleteCategory == "1") {
-                $get_sub_category_list = $this->categories->get_sub_category($pk_cat_id);               
+                $get_sub_category_list = $this->categories->get_channels($pk_cat_id);               
                 foreach ($get_sub_category_list as $subcate) {
                     $image_file="";
                     if ($subcate["channel_logo"] != "") {
@@ -134,7 +134,7 @@ class Category extends CI_Controller {
                         }
                     }
                 }
-                $delete_sub_ategory = $this->categories->delete_sub_category_list($pk_cat_id);
+                $delete_sub_ategory = $this->categories->delete_channel_list($pk_cat_id);
 
 
                 $this->session->set_flashdata('SucMessage', 'Category has been deleted successfully!!!');
@@ -147,27 +147,26 @@ class Category extends CI_Controller {
         }
     }
 
-    public function subcategory() {
-        $sub_category_lists = $this->categories->sub_category_lists();
-        //echo "<pre>";print_r($sub_category_lists);die;
-        $data = array('sub_category_lists' => $sub_category_lists);
+    public function channel_list() {
+        $channel_lists = $this->categories->channel_lists();        
+        $data = array('channel_lists' => $channel_lists);
         $this->load->view('admin/includes/header');
         $this->load->view('admin/includes/sidebar');
-        $this->load->view('admin/subcategory/list', $data);
+        $this->load->view('admin/channel/list', $data);
         $this->load->view('admin/includes/footer');
     }
 
-    public function sub_category_add() {
+    public function channel_add() {
         $category_lists = $this->categories->category_lists();
         $data = array('category_lists' => $category_lists);
         $this->load->view('admin/includes/header');
         $this->load->view('admin/includes/sidebar');
-        $this->load->view('admin/subcategory/add', $data);
+        $this->load->view('admin/channel/add', $data);
         $this->load->view('admin/includes/footer');
     }
 
     //login
-    public function ajax_add_sub_category() {
+    public function ajax_add_channel() {
 
 
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
@@ -194,39 +193,39 @@ class Category extends CI_Controller {
                         'channel_url' => trim($this->input->post('channel_url')),
                         'channel_logo' => trim($upload_image['image_file_name'])
                     );
-                    $add_subcategory = $this->categories->save_sub_category($data);
-                    if ($add_subcategory == 1) {
-                        $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('channel_name')) . ' Sub Category Added Successfully');
+                    $add_channel = $this->categories->save_channel($data);
+                    if ($add_channel == 1) {
+                        $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('channel_name')) . ' Channel Added Successfully');
                         echo json_encode(array('status' => 1));
                     } else {
-                        echo json_encode(array('status' => 0, 'msg' => 'Sub Category Added Not Successfully'));
+                        echo json_encode(array('status' => 0, 'msg' => 'Channel Added Not Successfully'));
                     }
                 }
             }
         }
     }
 
-    public function sub_category_edit($pk_sub_cat_id = NULL) {
+    public function channel_edit($pk_ch_id = NULL) {
 
-        if ($pk_sub_cat_id != "") {
+        if ($pk_ch_id != "") {
             $category_lists = $this->categories->category_lists();
-            $get_sub_category_list = $this->categories->get_sub_category_list($pk_sub_cat_id);
-            if (count($get_sub_category_list) > 0) {
+            $get_channel_list = $this->categories->get_channel_list($pk_ch_id);
+            if (count($get_channel_list) > 0) {
 
-                $data = array('get_sub_category_list' => $get_sub_category_list, 'category_lists' => $category_lists, 'pk_sub_cat_id' => $pk_sub_cat_id);
+                $data = array('get_channel_list' => $get_channel_list, 'category_lists' => $category_lists, 'pk_ch_id' => $pk_ch_id);
                 $this->load->view('admin/includes/header');
                 $this->load->view('admin/includes/sidebar');
-                $this->load->view('admin/subcategory/edit', $data);
+                $this->load->view('admin/channel/edit', $data);
                 $this->load->view('admin/includes/footer');
             } else {
-                redirect(base_url() . 'admin/subcategory/', 'refresh');
+                redirect(base_url() . 'admin/category/channel_list', 'refresh');
             }
         } else {
-            redirect(base_url() . 'admin/subcategory/', 'refresh');
+            redirect(base_url() . 'admin/category/channel_list', 'refresh');
         }
     }
 
-    public function ajax_edit_sub_category() {
+    public function ajax_edit_channel() {
 
 
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
@@ -240,14 +239,14 @@ class Category extends CI_Controller {
                 return false;
             } else {
 
-                $id = trim($this->input->post('pk_sub_cat_id'));
-                $get_sub_category_list = $this->categories->get_sub_category_list($id);
+                $id = trim($this->input->post('pk_ch_id'));
+                $get_channel_list = $this->categories->get_channel_list($id);
                 if (isset($_FILES['channel_logo']['name']) && (!empty($_FILES['channel_logo']['name']))) {
                     $upload_image = $this->do_upload_image('channel_logo');
                     if ($upload_image['image_message'] == "success") {
 
-                        if ($get_sub_category_list[0]["channel_logo"] != "") {
-                            $image_file = './upload/channel/' . $get_sub_category_list[0]["channel_logo"];
+                        if ($get_channel_list[0]["channel_logo"] != "") {
+                            $image_file = './upload/channel/' . $get_channel_list[0]["channel_logo"];
                             if (file_exists($image_file)) {
                                 unlink($image_file);
                             }
@@ -259,7 +258,7 @@ class Category extends CI_Controller {
                         return false;
                     }
                 } else {
-                    $file_name = $get_sub_category_list[0]['channel_logo'];
+                    $file_name = $get_channel_list[0]['channel_logo'];
                 }
                 $data = array('fk_cat_id' => trim($this->input->post('pk_cat_id')),
                     'channel_name' => trim($this->input->post('channel_name')),
@@ -268,21 +267,21 @@ class Category extends CI_Controller {
                     'channel_logo' => trim($file_name)
                 );
 
-                $update_subcategory = $this->categories->update_sub_category($data, $id);
-                if ($update_subcategory == 1) {
-                    $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('channel_name')) . ' Sub Category Updated Successfully');
+                $update_channel = $this->categories->update_channel($data, $id);
+                if ($update_channel == 1) {
+                    $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('channel_name')) . ' Channel Updated Successfully');
                     echo json_encode(array('status' => 1));
                 } else {
-                    echo json_encode(array('status' => 0, 'msg' => 'Sub Category Updated Not Successfully'));
+                    echo json_encode(array('status' => 0, 'msg' => 'Channel Updated Not Successfully'));
                 }
             }
         }
     }
 
-    public function exist_sub_category_check() {
+    public function exist_channel_check() {
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
 
-            $check_exist = $this->categories->check_exist_sub_category(trim($this->input->post('channel_name')), trim($this->input->post('fk_cat_id')), trim($this->input->post('pk_sub_cat_id')));
+            $check_exist = $this->categories->check_exist_sub_category(trim($this->input->post('channel_name')), trim($this->input->post('fk_cat_id')), trim($this->input->post('pk_ch_id')));
             if (count($check_exist)) {
                 echo "1";
             } else {
@@ -291,29 +290,29 @@ class Category extends CI_Controller {
         }
     }
 
-    public function sub_category_delete($pk_sub_cat_id = NULL) {
-        if ($pk_sub_cat_id != "") {
-            $get_sub_category_list = $this->categories->get_sub_category_list($pk_sub_cat_id);
-            if (count($get_sub_category_list) > 0) {
+    public function delete_channel($pk_ch_id = NULL) {
+        if ($pk_ch_id != "") {
+            $get_channel_list = $this->categories->get_channel_list($pk_ch_id);
+            if (count($get_channel_list) > 0) {
 
-                if ($get_sub_category_list[0]["channel_logo"] != "") {
-                    $image_file = './upload/channel/' . $get_sub_category_list[0]["channel_logo"];
+                if ($get_channel_list[0]["channel_logo"] != "") {
+                    $image_file = './upload/channel/' . $get_channel_list[0]["channel_logo"];
 
                     if (file_exists($image_file)) {
                         unlink($image_file);
                     }
                 }
 
-                $deleteSubCategory = $this->categories->delete_sub_category($pk_sub_cat_id);
+                $deleteSubCategory = $this->categories->delete_channel($pk_ch_id);
                 if ($deleteSubCategory == "1") {
-                    $this->session->set_flashdata('SucMessage', 'Sub Category has been deleted successfully!!!');
+                    $this->session->set_flashdata('SucMessage', 'Channel has been deleted successfully!!!');
                 } else {
-                    $this->session->set_flashdata('ErrorMessages', 'Sub Category has not been deleted successfully!!!');
+                    $this->session->set_flashdata('ErrorMessages', 'Channel has not been deleted successfully!!!');
                 }
             }
-            redirect(base_url() . 'admin/category/subcategory', 'refresh');
+            redirect(base_url() . 'admin/category/channel_list', 'refresh');
         } else {
-            redirect(base_url() . 'admin/category/subcategory', 'refresh');
+            redirect(base_url() . 'admin/category/channel_list', 'refresh');
         }
     }
 

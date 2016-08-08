@@ -184,8 +184,8 @@
 
         $.validator.addMethod("Exist_Email", function (value, element) {
 
-            var pk_uid = "";
-            var checkEmail = check_exist_email(value, pk_uid);
+            var pk_cust_id = "";
+            var checkEmail = check_exist_email(value, pk_cust_id);
             if (checkEmail == "1")
             {
                 return false;
@@ -197,8 +197,8 @@
          //Exist VC Number
          $.validator.addMethod("Exist_VC", function (value, element) {
 
-            var pk_uid = "";
-            var checkVC = check_exist_vc(value, pk_uid);
+            var pk_cust_id = "";
+            var checkVC = check_exist_vc(value, pk_cust_id);
             if (checkVC == "1")
             {
                 return false;
@@ -221,12 +221,12 @@
 
     });
 
-    function check_exist_email(email, pk_uid) {
+    function check_exist_email(email, pk_cust_id) {
         var isSuccess = 0;
         $.ajax({
             type: "POST",
             url: "<?php echo base_url(); ?>admin/users/exist_email_check",
-            data: "email=" + email + "&pk_uid=" + pk_uid,
+            data: "email=" + email + "&pk_cust_id=" + pk_cust_id,
             async: false,
             success:
                     function (msg) {
@@ -236,12 +236,12 @@
         return isSuccess;
     }
     
-    function check_exist_vc(vc_number, pk_uid) {
+    function check_exist_vc(vc_number, pk_cust_id) {
         var isSuccess = 0;
         $.ajax({
             type: "POST",
             url: "<?php echo base_url(); ?>admin/users/exist_vcnumber_check",
-            data: "vc_number=" + vc_number + "&pk_uid=" + pk_uid,
+            data: "vc_number=" + vc_number + "&pk_cust_id=" + pk_cust_id,
             async: false,
             success:
                     function (msg) {

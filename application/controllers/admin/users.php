@@ -41,9 +41,9 @@ class Users extends CI_Controller {
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
             $this->form_validation->set_rules('fname', 'First Name', 'trim|required|min_length[3]|max_length[30]');
             $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|min_length[3]|max_length[20]');
-            $this->form_validation->set_rules('emailid', 'Email', 'trim|required|valid_email|is_unique[user_mst.emailid]');
+            $this->form_validation->set_rules('emailid', 'Email', 'trim|required|valid_email|is_unique[cust_mst.emailid]');
             $this->form_validation->set_rules('mobileno', 'Mobile Number', 'trim|required|min_length[10]|max_length[10]');
-            $this->form_validation->set_rules('vc_number', 'VC Number', 'trim|required|min_length[3]|max_length[30]|is_unique[user_mst.vc_number]');
+            $this->form_validation->set_rules('vc_number', 'VC Number', 'trim|required|min_length[3]|max_length[30]|is_unique[cust_mst.vc_number]');
             if ($this->form_validation->run() == FALSE) {
 
                 echo json_encode(array('status' => 0, 'msg' => validation_errors()));
@@ -53,10 +53,9 @@ class Users extends CI_Controller {
                     'lname' => trim($this->input->post('lname')),
                     'emailid' => trim($this->input->post('emailid')),
                     'mobileno' => trim($this->input->post('mobileno')),
-                    'vc_number' => trim($this->input->post('vc_number')),
-                    'fk_role_id' => 2
+                    'vc_number' => trim($this->input->post('vc_number'))                    
                 );
-                $add_users = $this->users->save_users($data);
+               $add_users = $this->users->save_users($data);
                 if ($add_users == 1) {
                     $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('fname')) . ' User Added Successfully');
                     echo json_encode(array('status' => 1));
@@ -67,13 +66,13 @@ class Users extends CI_Controller {
         }
     }
 
-    public function edit($pk_uid = NULL) {
+    public function edit($pk_cust_id = NULL) {
 
-        if ($pk_uid != "") {
-            $get_user_list = $this->users->get_user_list($pk_uid);
+        if ($pk_cust_id != "") {
+            $get_user_list = $this->users->get_user_list($pk_cust_id);
             if (count($get_user_list) > 0) {
 
-                $data = array('get_user_list' => $get_user_list, 'pk_uid' => $pk_uid);
+                $data = array('get_user_list' => $get_user_list, 'pk_cust_id' => $pk_cust_id);
                 $this->load->view('admin/includes/header');
                 $this->load->view('admin/includes/sidebar');
                 $this->load->view('admin/users/edit', $data);
@@ -107,8 +106,8 @@ class Users extends CI_Controller {
                     'mobileno' => trim($this->input->post('mobileno')),
                     'vc_number' => trim($this->input->post('vc_number'))
                 );
-                $id = trim($this->input->post('pk_uid'));
-                $update_users = $this->users->update_users($data, $id);
+                $id = trim($this->input->post('pk_cust_id'));
+                $update_users = $this->users->update_users($data, $id);                
                 if ($update_users == 1) {
                     $this->session->set_flashdata('SucMessage', ucfirst($this->input->post('fname')) . ' User Updated Successfully');
                     echo json_encode(array('status' => 1));
@@ -122,7 +121,7 @@ class Users extends CI_Controller {
     public function exist_email_check() {
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
 
-            $check_exist = $this->users->check_exist_email(trim($this->input->post('email')), trim($this->input->post('pk_uid')));
+            $check_exist = $this->users->check_exist_email(trim($this->input->post('email')), trim($this->input->post('pk_cust_id')));
             if (count($check_exist)) {
                 echo "1";
             } else {
@@ -134,7 +133,7 @@ class Users extends CI_Controller {
     public function exist_vcnumber_check() {
         if (($this->input->server('REQUEST_METHOD') == 'POST')) {
 
-            $check_exist = $this->users->check_exist_vcnumber(trim($this->input->post('vc_number')), trim($this->input->post('pk_uid')));
+            $check_exist = $this->users->check_exist_vcnumber(trim($this->input->post('vc_number')), trim($this->input->post('pk_cust_id')));
             if (count($check_exist)) {
                 echo "1";
             } else {
@@ -143,9 +142,9 @@ class Users extends CI_Controller {
         }
     }
 
-    public function delete($pk_uid = NULL) {
-        if ($pk_uid != "") {            
-                $deleteUsers = $this->users->delete_user($pk_uid);
+    public function delete($pk_cust_id = NULL) {
+        if ($pk_cust_id != "") {            
+                $deleteUsers = $this->users->delete_user($pk_cust_id);
                 if($deleteUsers=="1")
                 {
                 $this->session->set_flashdata('SucMessage', 'User has been deleted successfully!!!');
