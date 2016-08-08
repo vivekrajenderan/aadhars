@@ -121,7 +121,22 @@ class Category extends CI_Controller {
     public function delete($pk_cat_id = NULL) {
         if ($pk_cat_id != "") {
             $deleteCategory = $this->categories->delete_category($pk_cat_id);
+
             if ($deleteCategory == "1") {
+                $get_sub_category_list = $this->categories->get_sub_category($pk_cat_id);               
+                foreach ($get_sub_category_list as $subcate) {
+                    $image_file="";
+                    if ($subcate["channel_logo"] != "") {
+                        $image_file = './upload/channel/' . $subcate["channel_logo"];
+
+                        if (file_exists($image_file)) {
+                            unlink($image_file);
+                        }
+                    }
+                }
+                $delete_sub_ategory = $this->categories->delete_sub_category_list($pk_cat_id);
+
+
                 $this->session->set_flashdata('SucMessage', 'Category has been deleted successfully!!!');
             } else {
                 $this->session->set_flashdata('ErrorMessages', 'Category has not been deleted successfully!!!');

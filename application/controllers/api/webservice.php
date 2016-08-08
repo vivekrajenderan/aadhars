@@ -68,9 +68,9 @@ class Webservice extends REST_Controller {
     
     public function categories_list_post() {
             $category_lists = $this->webservice_model->category_lists();
-            $sub_category_lists = $this->webservice_model->sub_category_lists();            
-            if (count($category_lists) > 0 && count($sub_category_lists)>0) {
-                $msg = array('status'=>true,"category_lists" => $category_lists,'sub_category_lists'=>$sub_category_lists);
+            //$sub_category_lists = $this->webservice_model->sub_category_lists();            
+            if (count($category_lists) > 0) {
+                $msg = array('status'=>true,"category_lists" => $category_lists);
                 $this->response(array('result' => json_encode($msg)), 200);
             } else {
                 $msg = array('status'=>false,"msg" => "No Record");                
