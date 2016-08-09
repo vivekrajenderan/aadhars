@@ -15,6 +15,7 @@ class Webservice_model extends CI_Model {
         $this->db->from('cust_mst');
         $this->db->where('vc_number', $vc_number);
         $this->db->where('mobileno', $mobileno);
+        $this->db->where('standing', '1');
         $query = $this->db->get();       
         if ($query->num_rows() > 0) {
             $row = $query->row_array();
@@ -52,7 +53,8 @@ class Webservice_model extends CI_Model {
     }
     
     public function get_channel_list($fk_cat_id) {
-        $this->db->select("cm.pk_ch_id,cm.fk_cat_id,cm.channel_name,cm.channel_logo,cm.channel_url,c.cate_name");
+        $this->db->select("cm.pk_ch_id,cm.fk_cat_id,cm.channel_name,cm.channel_url,c.cate_name");
+        $this->db->select("CONCAT('http://128.199.145.47/aadhar/upload/channel/',cm.channel_logo) as channel_logo",false);
         $this->db->from('channel_mst as cm');  
         $this->db->join('category_mst as c','cm.fk_cat_id=c.pk_cat_id');
         $this->db->where('cm.fk_cat_id',$fk_cat_id);
