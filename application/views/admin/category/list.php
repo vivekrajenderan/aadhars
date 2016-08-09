@@ -29,12 +29,9 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div class="alert alert-success"  style="display:none;">
-                            <button data-dismiss="alert" class="close" type="button">&times;</button>
-
+                        <div class="alert alert-success" id="alert-success"  style="display:none;">    
                         </div>
-                        <div class="alert alert-error"  style="display:none;">
-                            <button data-dismiss="alert" class="close" type="button">&times;</button>                            
+                        <div class="alert alert-error"  id="alert-error" style="display:none;">
                         </div>
                         <?php if ($this->session->flashdata('ErrorMessages') != '') { ?>
                             <div class="alert alert-error">
@@ -111,18 +108,18 @@
 
                 if (response.status == 1)
                 {                    
-                    $('.alert-success').show();
-                    $('.alert-success').html(response.msg);
+                    $('#alert-success').show();
+                    $('#alert-success').html(response.msg);
                     setTimeout(function () {
-                        $('.alert-success').hide('slow');
+                        $('#alert-success').hide('slow');
                     }, 4000);
                 }
                 else
                 {
-                    $('.alert-danger').show();
-                    $('.alert-danger').html(response.msg);
+                    $('#alert-error').show();
+                    $('#alert-error').html(response.msg);
                     setTimeout(function () {
-                        $('.alert-danger').hide('slow');
+                        $('#alert-error').hide('slow');
                     }, 4000);
                 }
             });

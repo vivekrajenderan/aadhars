@@ -156,6 +156,22 @@ class Users extends CI_Controller {
             redirect(base_url() . 'admin/users/', 'refresh');
         }
     }
+    
+     public function change_users_active() {
+        if (($this->input->server('REQUEST_METHOD') == 'POST')) {
+
+            $data = array('standing' => trim($this->input->post('standing'))
+            );
+            $id = trim($this->input->post('pk_cust_id'));
+            $update_users = $this->users->update_users($data, $id);
+            $standing=($this->input->post('standing')==1 ? 'Active' : 'Inactive');
+            if ($update_users == 1) {                
+                echo json_encode(array('status' => 1, 'msg' => "User $standing Successfully"));
+            } else {
+                echo json_encode(array('status' => 0, 'msg' => "User $standing Not Successfully"));
+            }
+        }
+    }
 
     public function edit_profile() {
         $get_user_list=$this->users->get_user_mst();  

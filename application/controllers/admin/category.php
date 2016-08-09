@@ -331,6 +331,22 @@ class Category extends CI_Controller {
             redirect(base_url() . 'admin/category/channel_list', 'refresh');
         }
     }
+    
+     public function change_channel_active() {
+        if (($this->input->server('REQUEST_METHOD') == 'POST')) {
+
+            $data = array('standing' => trim($this->input->post('standing'))
+            );
+            $id = trim($this->input->post('pk_ch_id'));
+             $update_channel = $this->categories->update_channel($data, $id);
+            $standing=($this->input->post('standing')==1 ? 'Active' : 'Inactive');
+            if ($update_channel == 1) {                
+                echo json_encode(array('status' => 1, 'msg' => "Channel $standing Successfully"));
+            } else {
+                echo json_encode(array('status' => 0, 'msg' => "Channel $standing Not Successfully"));
+            }
+        }
+    }
 
     function do_upload_image($field_name) {
         $msg = array();

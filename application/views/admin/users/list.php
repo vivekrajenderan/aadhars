@@ -29,7 +29,10 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-
+                        <div class="alert alert-success" id="alert-success"  style="display:none;">    
+                        </div>
+                        <div class="alert alert-error"  id="alert-error" style="display:none;">
+                        </div>
                         <?php if ($this->session->flashdata('ErrorMessages') != '') { ?>
                             <div class="alert alert-error">
                                 <button data-dismiss="alert" class="close" type="button">&times;</button>
@@ -72,6 +75,12 @@
                                         <td><?php echo date("Y-m-d", strtotime($list['created_on'])); ?></td>
                                         <td >   <a href="<?php echo base_url(); ?>admin/users/edit/<?php echo md5($list['pk_cust_id']); ?>" title="edit"><i class="fa fa-edit"></i></a> 
                                             &nbsp;&nbsp;&nbsp;<a title="delete" href="<?php echo base_url(); ?>admin/users/delete/<?php echo md5($list['pk_cust_id']); ?>" onClick="return confirm('Do u really want to delete User?');" > <i class="fa fa-trash"></i></a>
+                                        &nbsp;&nbsp;&nbsp;
+                                            <input type="checkbox" class="switch" <?php
+                                                   if ($list['standing'] == "1") {
+                                                       echo "checked";
+                                                   }
+                                                   ?> data-id="<?php echo $key; ?>" data-name="<?php echo md5($list['pk_cust_id']); ?>"/>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -85,3 +94,46 @@
     </div>
 </div>
 <!-- /page content -->
+
+<script src="<?php echo base_url(); ?>assets/js/bootstrap-switch.js"></script>  
+<script>
+    $(document).ready(function () {
+        $("input.switch").bootstrapSwitch();
+        $('.switch').on('switchChange.bootstrapSwitch', function (event, state) {
+            var standing = 0;
+            if (state == true)
+            {
+                standing = 1;
+            }
+            var pk_cust_id = $(this).attr('data-name');
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>admin/users/change_users_active",
+                data: "standing=" + standing + "&pk_cust_id=" + pk_cust_id,
+                dataType: 'json'
+            }).done(function (response) {
+
+                if (response.status == 1)
+                {                    
+                    $('#alert-success').show();
+                    $('#alert-success').html(response.msg);
+                    setTimeout(function () {
+                        $('#alert-success').hide('slow');
+                    }, 4000);
+                }
+                else
+                {
+                    $('#alert-error').show();
+                    $('#alert-error').html(response.msg);
+                    setTimeout(function () {
+                        $('#alert-error').hide('slow');
+                    }, 4000);
+                }
+            });
+            return false;
+
+        });
+    });
+
+</script>
